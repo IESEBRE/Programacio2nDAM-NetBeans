@@ -1,2 +1,0 @@
-utilscontroller.Utils
-utilscontroller.NotEditTableModel

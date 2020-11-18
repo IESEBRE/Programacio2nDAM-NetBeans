@@ -34,7 +34,7 @@ public class Utils {
     //Al mètode usem el NonEditTableModel que no permet editar les cel·les de la JTable (el DefaultTableModel sí ho permet)
     //Esta versió afegix a la darrera columna de la taula l'objecte mostrat a la mateixa de manera que el podrem recuperar fàcilment per fer updates, deletes, etc...
     //Esta columna extra no apareix a la taula ja que la borrem, però la retornem per poder-la afegir quan sigue necessari
-    public static<E> TableColumn loadTable(ArrayList<E> dades, JTable taula, Class<E> classe) {
+    public static<E> TableColumn loadTable(Collection<E> dades, JTable taula, Class<E> classe) {
 
         //variables locals
         Vector columnNames = new Vector();
