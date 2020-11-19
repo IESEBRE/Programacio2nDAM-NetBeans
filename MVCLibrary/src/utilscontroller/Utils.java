@@ -29,7 +29,7 @@ import javax.swing.table.TableColumnModel;
  */
 public class Utils {
 
-    //Mètode que carrega els objectes continguts a l'ArrayList i els mostra a la JTable. La classe indica de quin tipo són els objectes de l'ArrayList (3r paràmetre)
+    //Mètode que carrega els objectes continguts a la col·lecció i els mostra a la JTable. La classe indica de quin tipo són els objectes de l'ArrayList (3r paràmetre)
     //Si volem que es puguen modificar les dades directament des de la taula hauríem d'usar el model instància de la classe ModelCanvisBD, que varia d'una BD a una altra
     //Al mètode usem el NonEditTableModel que no permet editar les cel·les de la JTable (el DefaultTableModel sí ho permet)
     //Esta versió afegix a la darrera columna de la taula l'objecte mostrat a la mateixa de manera que el podrem recuperar fàcilment per fer updates, deletes, etc...
