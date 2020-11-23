@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Vector;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
@@ -34,11 +33,11 @@ public class Utils {
     //Al mètode usem el NonEditTableModel que no permet editar les cel·les de la JTable (el DefaultTableModel sí ho permet)
     //Esta versió afegix a la darrera columna de la taula l'objecte mostrat a la mateixa de manera que el podrem recuperar fàcilment per fer updates, deletes, etc...
     //Esta columna extra no apareix a la taula ja que la borrem, però la retornem per poder-la afegir quan sigue necessari
-    public static<E> TableColumn loadTable(Collection<E> dades, JTable taula, Class<E> classe) {
+    public static <E> TableColumn loadTable(Collection<E> dades, JTable taula, Class<E> classe) {
 
         //variables locals
-        Vector columnNames = new Vector();
-        Vector data = new Vector();
+        ArrayList<String> columnNames = new ArrayList<>();
+        ArrayList<Object[]> data = new ArrayList<>();
         //Per poder actualitzar la BD des de la taula usaríem el model comentat
         //ModelCanvisBD model;
         DefaultTableModel model;
@@ -51,45 +50,18 @@ public class Utils {
         //Recorrem els camps de la classe i posem els seus noms com a columnes de la taula
         //Com hem hagut de posar _numero_ davant el nom dels camps, mostrem el nom a partir del 2n _ 
         for (Field f : camps) {
-            columnNames.addElement(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
+            columnNames.add(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
         }
         //Afegixo al model de la taula una columna on guardaré l'objecte mostrat a cada fila (amago la columna al final per a que no aparegue a la vista)
-        columnNames.addElement("objecte");
+        columnNames.add("objecte");
         //Si hi ha algun element a l'arraylist omplim la taula
         if (dades.size() != 0) {
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
 
-            //Guardem els descriptors de mètode que ens interessen (els getters), més una columna per guardar l'objecte sencer
-            Vector<Method> methods = new Vector(ncamps + 1);
-            try {
-
-                PropertyDescriptor[] descriptors = Introspector.getBeanInfo(classe).getPropertyDescriptors();
-                Arrays.sort(descriptors, new OrderClassMethodsAlphabetically());
-                for (PropertyDescriptor pD : descriptors) {
-                    Method m = pD.getReadMethod();
-                    if (m != null & !m.getName().equals("getClass")) {
-                        methods.addElement(m);
-                    }
-                }
-
-            } catch (IntrospectionException ex) {}
-            for (E m : dades) {
-                Vector row = new Vector(ncamps + 1);
-
-                for (Method mD : methods) {
-                    try {
-                        row.addElement(mD.invoke(m));
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {} 
-                }
-
-                //Aquí guardo l'objecte sencer a la darrera columna
-                row.addElement(m);
-                //Finalment afegixo la fila a les dades
-                data.addElement(row);
-            }
         }
 
         //Utilitzem el model que no permet editar les caselles de la taula
-        model = new NotEditTableModel(data, columnNames);
+        model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         taula.setModel(model);
 
         //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
@@ -108,15 +80,14 @@ public class Utils {
 
     }
 
-    
     //Com l'anterior en un booleà per dir si volem els noms de les columnes en
     //majúscula, i que obté el nom de la columna a partir del 2n _, no de l'últim
     //com passava anteriorment
-    public static<E> TableColumn loadTable(Collection<E> dades, JTable taula, Class<E> classe, boolean majuscula, boolean segon) {
+    public static <E> TableColumn loadTable(Collection<E> dades, JTable taula, Class<E> classe, boolean majuscula, boolean segon) {
 
         //variables locals
-        Vector columnNames = new Vector();
-        Vector data = new Vector();
+        ArrayList<String> columnNames = new ArrayList<>();
+        ArrayList<Object[]> data = new ArrayList<>();
         //Per poder actualitzar la BD des de la taula usaríem el model comentat
         //ModelCanvisBD model;
         DefaultTableModel model;
@@ -129,19 +100,22 @@ public class Utils {
         //Recorrem els camps de la classe i posem els seus noms com a columnes de la taula
         //Com hem hagut de posar _numero_ davant el nom dels camps, mostrem el nom a partir del 2n _ 
         for (Field f : camps) {
-            String nom=f.getName().substring(1);    //ignorem el primer _
-            if(majuscula) nom=nom.toUpperCase();
-            if(segon)
-                nom=nom.substring(nom.indexOf('_')+1);
-            else
-                nom=nom.substring(nom.lastIndexOf('_')+1);
-            columnNames.addElement(nom);
+            String nom = f.getName().substring(1);    //ignorem el primer _
+            if (majuscula) {
+                nom = nom.toUpperCase();
+            }
+            if (segon) {
+                nom = nom.substring(nom.indexOf('_') + 1);
+            } else {
+                nom = nom.substring(nom.lastIndexOf('_') + 1);
+            }
+            columnNames.add(nom);
         }
         //Afegixo al model de la taula una columna on guardaré l'objecte mostrat a cada fila (amago la columna al final per a que no aparegue a la vista)
-        columnNames.addElement("objecte");
+        columnNames.add("objecte");
         //Si hi ha algun element a l'arraylist omplim la taula
         if (dades.size() != 0) {
-
+/*
             //Guardem els descriptors de mètode que ens interessen (els getters), més una columna per guardar l'objecte sencer
             Vector<Method> methods = new Vector(ncamps + 1);
             try {
@@ -155,25 +129,30 @@ public class Utils {
                     }
                 }
 
-            } catch (IntrospectionException ex) {}
+            } catch (IntrospectionException ex) {
+            }
             for (E m : dades) {
-                Vector row = new Vector(ncamps + 1);
-
+                Object[] row = new Object[ncamps + 1];
+                int i = 0;
                 for (Method mD : methods) {
                     try {
-                        row.addElement(mD.invoke(m));
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {} 
+                        row[i++] = mD.invoke(m);
+                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                    }
                 }
 
                 //Aquí guardo l'objecte sencer a la darrera columna
-                row.addElement(m);
+                row[i] = m;
                 //Finalment afegixo la fila a les dades
-                data.addElement(row);
+                data.add(row);
             }
+            */
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
+    
         }
 
         //Utilitzem el model que no permet editar les caselles de la taula
-        model = new NotEditTableModel(data, columnNames);
+        model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         taula.setModel(model);
 
         //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
@@ -192,15 +171,12 @@ public class Utils {
 
     }
 
-    
-    
-    
     //Com l'anterior però podem dir si volem taula editable o no
-    public static<E> TableColumn loadTable(ArrayList<E> dades, JTable taula, Class<E> classe, boolean editable) {
+    public static <E> TableColumn loadTable(ArrayList<E> dades, JTable taula, Class<E> classe, boolean editable) {
 
         //variables locals
-        Vector columnNames = new Vector();
-        Vector data = new Vector();
+        ArrayList<String> columnNames = new ArrayList<>();
+        ArrayList<Object[]> data = new ArrayList<>();
         //Per poder actualitzar la BD des de la taula usaríem el model comentat
         //ModelCanvisBD model;
         DefaultTableModel model;
@@ -213,49 +189,21 @@ public class Utils {
         //Recorrem els camps de la classe i posem els seus noms com a columnes de la taula
         //Com hem hagut de posar _numero_ davant el nom dels camps, mostrem el nom a partir del 2n _ 
         for (Field f : camps) {
-            columnNames.addElement(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
+            columnNames.add(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
         }
         //Afegixo al model de la taula una columna on guardaré l'objecte mostrat a cada fila (amago la columna al final per a que no aparegue a la vista)
-        columnNames.addElement("objecte");
+        columnNames.add("objecte");
         //Si hi ha algun element a l'arraylist omplim la taula
         if (dades.size() != 0) {
-
-            //Guardem els descriptors de mètode que ens interessen (els getters), més una columna per guardar l'objecte sencer
-            Vector<Method> methods = new Vector(ncamps + 1);
-            try {
-
-                PropertyDescriptor[] descriptors = Introspector.getBeanInfo(classe).getPropertyDescriptors();
-                Arrays.sort(descriptors, new OrderClassMethodsAlphabetically());
-                for (PropertyDescriptor pD : descriptors) {
-                    Method m = pD.getReadMethod();
-                    if (m != null & !m.getName().equals("getClass")) {
-                        methods.addElement(m);
-                    }
-                }
-
-            } catch (IntrospectionException ex) {}
-            for (E m : dades) {
-                Vector row = new Vector(ncamps + 1);
-
-                for (Method mD : methods) {
-                    try {
-                        row.addElement(mD.invoke(m));
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {} 
-                }
-
-                //Aquí guardo l'objecte sencer a la darrera columna
-                row.addElement(m);
-                //Finalment afegixo la fila a les dades
-                data.addElement(row);
-            }
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
         }
 
         //Utilitzem el model que permet o no editar les caselles de la taula 
         //segons el valor del paràmetre editable        
         if (editable) {
-            model = new DefaultTableModel(data, columnNames);
+            model = new DefaultTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         } else {
-            model = new NotEditTableModel(data, columnNames);
+            model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         }
 
         taula.setModel(model);
@@ -278,11 +226,11 @@ public class Utils {
 
     //Com l'anterior però per treballar en BDs usant un ResultSet. Si la fem 
     //editable podrem actualitzar les dades de la BD directament des de la JTable
-    public static<E> TableColumn loadTable(ArrayList<E> dades, JTable taula, Class<E> classe, boolean editable, java.sql.ResultSet resultSet) {
+    public static <E> TableColumn loadTable(ArrayList<E> dades, JTable taula, Class<E> classe, boolean editable, java.sql.ResultSet resultSet) {
 
         //variables locals
-        Vector columnNames = new Vector();
-        Vector data = new Vector();
+        ArrayList<String> columnNames = new ArrayList<>();
+        ArrayList<Object[]> data = new ArrayList<>();
         //Per poder actualitzar la BD des de la taula usaríem el model comentat
         //ModelCanvisBD model;
         DefaultTableModel model;
@@ -295,41 +243,13 @@ public class Utils {
         //Recorrem els camps de la classe i posem els seus noms com a columnes de la taula
         //Com hem hagut de posar _numero_ davant el nom dels camps, mostrem el nom a partir del 2n _ 
         for (Field f : camps) {
-            columnNames.addElement(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
+            columnNames.add(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
         }
         //Afegixo al model de la taula una columna on guardaré l'objecte mostrat a cada fila (amago la columna al final per a que no aparegue a la vista)
-        columnNames.addElement("objecte");
+        columnNames.add("objecte");
         //Si hi ha algun element a l'arraylist omplim la taula
         if (dades.size() != 0) {
-
-            //Guardem els descriptors de mètode que ens interessen (els getters), més una columna per guardar l'objecte sencer
-            Vector<Method> methods = new Vector(ncamps + 1);
-            try {
-
-                PropertyDescriptor[] descriptors = Introspector.getBeanInfo(classe).getPropertyDescriptors();
-                Arrays.sort(descriptors, new OrderClassMethodsAlphabetically());
-                for (PropertyDescriptor pD : descriptors) {
-                    Method m = pD.getReadMethod();
-                    if (m != null & !m.getName().equals("getClass")) {
-                        methods.addElement(m);
-                    }
-                }
-
-            } catch (IntrospectionException ex) {}
-            for (E m : dades) {
-                Vector row = new Vector(ncamps + 1);
-
-                for (Method mD : methods) {
-                    try {
-                        row.addElement(mD.invoke(m));
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {} 
-                }
-
-                //Aquí guardo l'objecte sencer a la darrera columna
-                row.addElement(m);
-                //Finalment afegixo la fila a les dades
-                data.addElement(row);
-            }
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
         }
 
         //Utilitzem el model que permet o no editar les caselles de la taula 
@@ -339,7 +259,8 @@ public class Utils {
             model = new ModelCanvisBD(data, columnNames, resultSet);
             //model = new DefaultTableModel(data, columnNames);
         } else {
-            model = new NotEditTableModel(data, columnNames);
+            model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
+
         }
 
         taula.setModel(model);
@@ -360,15 +281,13 @@ public class Utils {
 
     }
 
-
     //Fa el mateix que loadTable() però no retorna la columna en els objectes
     //Les cel·les de la JTable no es podran editar
     public static <E> void loadTableNoReturn(ArrayList<E> resultSet, JTable taula, Class<E> classe) {
         // TODO add your handling code here:
         //Quan tornem a carregar la taula perdem la selecció que haviem fet i posem filasel a -1
-
-        Vector columnNames = new Vector();
-        Vector data = new Vector();
+        ArrayList<String> columnNames = new ArrayList<>();
+        ArrayList<Object[]> data = new ArrayList<>();
         DefaultTableModel model;
 
         //Anotem el nº de camps de la classe
@@ -381,43 +300,16 @@ public class Utils {
         //Recorrem els camps de la classe i posem els seus noms com a columnes de la taula
         //Com hem hagut de posar numero davant el nom dels camps, mostrem el nom a partir del 2n _ 
         for (Field f : camps) {
-            columnNames.addElement(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
+            columnNames.add(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
         }
 
         //Si hi ha algun element a l'arraylist omplim la taula
-        if (resultSet.size() != 0) {    
+        if (resultSet.size() != 0) {
+            Utils.<E>getTableData(resultSet, classe, columnNames, data, ncamps); 
 
-            //Guardem els descriptors de mètode que ens interessen (els getters)
-            Vector<Method> methods = new Vector(resultSet.size());
-
-            try {
-                PropertyDescriptor[] descriptors = Introspector.getBeanInfo(classe).getPropertyDescriptors();
-                Arrays.sort(descriptors, new OrderClassMethodsAlphabetically());
-
-                for (PropertyDescriptor pD : descriptors) {
-                    Method m = pD.getReadMethod();
-
-                    if (m != null & !m.getName().equals("getClass")) {
-                        methods.addElement(m);
-                    }
-                }
-
-            } catch (Exception ex) {}
-
-            for (E m : resultSet) {
-                Vector row = new Vector(ncamps);
-
-                for (Method mD : methods) {
-                    try {
-                        row.addElement(mD.invoke(m));
-                    } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {} 
-                }
-
-                data.addElement(row);
-            }
         }
 
-        model = new NotEditTableModel(data, columnNames);
+        model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         taula.setModel(model);
 
         TableColumn column;
@@ -430,38 +322,17 @@ public class Utils {
     //Passem el nom de columnes i les dades en arrays
     //Les cel·les de la JTable no es podran editar
     public static void loadTable(String[] nomCols, Object[][] dades, JTable taula) {
+        //Variables locals
+        DefaultTableModel model;
 
         //Mirem si han passat columnes i dades. En cas contrari sortim
         if (nomCols == null || dades == null) {
             return;
         }
 
-        //Variables locals
-        Vector columnNames = new Vector();
-        Vector data = new Vector();
-        DefaultTableModel model;
 
-        //Anotem el nº de columnes a mostrar
-        int ncamps = nomCols.length;
-
-        //Recorrem l'array de noms de columna i els posem com a columnes de la taula
-        for (String s : nomCols) {
-            columnNames.addElement(s);
-        }
-
-        //Si hi ha algun element a l'array de dades omplim la taula
-        if (dades.length != 0) {
-
-            for (int i = 0; i < dades.length; i++) {
-                Vector row = new Vector(ncamps);
-                for (int j = 0; j < dades[i].length; j++) {
-                    row.add(dades[i][j]);
-                }
-                data.addElement(row);
-            }
-        }
-
-        model = new NotEditTableModel(data, columnNames);
+        //model = new NotEditTableModel(data, columnNames);
+        model = new NotEditTableModel(dades, nomCols);
         taula.setModel(model);
 
         TableColumn column;
@@ -471,6 +342,44 @@ public class Utils {
         }
     }
 
+    //Mètode que obté les dades i columnes que mostrarem a les taules
+    private static <E> void getTableData(Collection<E> dades, Class<E> classe, ArrayList<String> columnNames, ArrayList<Object[]> data, int ncamps) {
+        //Guardem els descriptors de mètode que ens interessen (els getters), més una columna per guardar l'objecte sencer
+        Method[] methods = new Method[ncamps];
+        try {
+
+            PropertyDescriptor[] descriptors = Introspector.getBeanInfo(classe).getPropertyDescriptors();
+            Arrays.sort(descriptors, new OrderClassMethodsAlphabetically());
+            int i=0;
+            for (PropertyDescriptor pD : descriptors) {
+                Method m = pD.getReadMethod();
+                if (m != null & !m.getName().equals("getClass")) {
+                    methods[i++]=m;
+                }
+            }
+
+        } catch (IntrospectionException ex) {
+        }
+        for (E m : dades) {
+            Object[] row = new Object[ncamps + 1];
+            int i = 0;
+            for (Method mD : methods) {
+                try {
+                    row[i++] = mD.invoke(m);
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                }
+            }
+
+            //Aquí guardo l'objecte sencer a la darrera columna
+            row[i] = m;
+            //Finalment afegixo la fila a les dades
+            data.add(row);
+        }
+
+    }
+
+    
+    
     //Classe que serveix per ordenar els mètodes de les classes alfabèticament
     private static class OrderClassMethodsAlphabetically implements Comparator {
 
@@ -509,15 +418,13 @@ public class Utils {
     public static void loadCombo(Object[] resultSet, JComboBox combo) {
         combo.setModel(new DefaultComboBoxModel((resultSet != null ? resultSet : new Object[]{})));
     }
-    
 
 }
-
 
 //Model de dades de les JTable que no permet editar les caselles
 class NotEditTableModel extends DefaultTableModel {
 
-    public NotEditTableModel(Vector data, Vector columns) {
+    public NotEditTableModel(Object[][] data, Object[] columns) {
         super(data, columns);
     }
 
@@ -588,5 +495,3 @@ class ModelCanvisBD extends DefaultTableModel {
     }
 }
  */
-
- 

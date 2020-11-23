@@ -6,6 +6,7 @@
 package utilscontroller;
 
 import java.sql.ResultSet;
+import java.util.ArrayList;
 import java.util.Vector;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -63,6 +64,43 @@ public class ModelCanvisBD extends DefaultTableModel {
     //al consultar les dades
     public ModelCanvisBD(Vector data, Vector columnNames, ResultSet rs) {
         super(data, columnNames);
+        resultSet = rs;
+        //El que s'ha de fer és afegir un ModelListener al TableModel de la 
+        //JTable que reaccione als canvis. Ho aconseguim implementant el mètode 
+        //tableChanged()
+        this.addTableModelListener(new TableModelListener() {
+            
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                
+                //Obtenim l'objecte contingut a la casella canviada
+                
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                TableModel model = (TableModel) e.getSource();
+                Object data = model.getValueAt(row, column);
+                try {
+                    //Ens desplacem a la fila clicada (+1 ja quew al ResultSet 
+                    //comencen en la 1, no en la 0 com al TableModel)
+                    resultSet.absolute(row+1);
+                    //Actualitzem la columna (ara li hem de sumar 1 a la columna 
+                    //retornada pel TableModel)
+                    resultSet.updateObject(column + 1, data);
+                    resultSet.updateRow();
+                } catch (Exception ex) {
+                    //Hi ha hagut una excepció, per tant un error 
+                    error=true;
+                }
+            }
+        }
+        );
+
+    }
+
+    //Actualitzem la fila que ha estat modificada passant el ResultSet obtingut 
+    //al consultar les dades
+    public ModelCanvisBD(ArrayList<Object[]> data, ArrayList<String> columnNames, ResultSet rs) {
+        super((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         resultSet = rs;
         //El que s'ha de fer és afegir un ModelListener al TableModel de la 
         //JTable que reaccione als canvis. Ho aconseguim implementant el mètode 
