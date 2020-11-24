@@ -64,19 +64,8 @@ public class Utils {
         model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         taula.setModel(model);
 
-        //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
-        TableColumnModel tcm = taula.getColumnModel();
-        TableColumn columna = tcm.getColumn(tcm.getColumnCount() - 1);
-        tcm.removeColumn(columna);
-
-        //Fixo l'amplada de les columnes que sí es mostren
-        TableColumn column;
-        for (int i = 0; i < taula.getColumnCount(); i++) {
-            column = taula.getColumnModel().getColumn(i);
-            column.setMaxWidth(250);
-        }
-
-        return columna;
+        //Crido al mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
+        return Utils.arrangeTableColumns(taula);
 
     }
 
@@ -154,7 +143,12 @@ public class Utils {
         //Utilitzem el model que no permet editar les caselles de la taula
         model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         taula.setModel(model);
-
+        
+        //Crido al mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
+        return Utils.arrangeTableColumns(taula);
+/*        //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
+        taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        
         //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
         TableColumnModel tcm = taula.getColumnModel();
         TableColumn columna = tcm.getColumn(tcm.getColumnCount() - 1);
@@ -164,11 +158,11 @@ public class Utils {
         TableColumn column;
         for (int i = 0; i < taula.getColumnCount(); i++) {
             column = taula.getColumnModel().getColumn(i);
-            column.setMaxWidth(250);
+            column.setPreferredWidth(250);
         }
 
         return columna;
-
+*/
     }
 
     //Com l'anterior però podem dir si volem taula editable o no
@@ -208,19 +202,8 @@ public class Utils {
 
         taula.setModel(model);
 
-        //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
-        TableColumnModel tcm = taula.getColumnModel();
-        TableColumn columna = tcm.getColumn(tcm.getColumnCount() - 1);
-        tcm.removeColumn(columna);
-
-        //Fixo l'amplada de les columnes que sí es mostren
-        TableColumn column;
-        for (int i = 0; i < taula.getColumnCount(); i++) {
-            column = taula.getColumnModel().getColumn(i);
-            column.setMaxWidth(250);
-        }
-
-        return columna;
+        //Crido al mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
+        return Utils.arrangeTableColumns(taula);
 
     }
 
@@ -265,19 +248,8 @@ public class Utils {
 
         taula.setModel(model);
 
-        //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
-        TableColumnModel tcm = taula.getColumnModel();
-        TableColumn columna = tcm.getColumn(tcm.getColumnCount() - 1);
-        tcm.removeColumn(columna);
-
-        //Fixo l'amplada de les columnes que sí es mostren
-        TableColumn column;
-        for (int i = 0; i < taula.getColumnCount(); i++) {
-            column = taula.getColumnModel().getColumn(i);
-            column.setMaxWidth(250);
-        }
-
-        return columna;
+        //Crido al mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
+        return Utils.arrangeTableColumns(taula);
 
     }
 
@@ -312,10 +284,11 @@ public class Utils {
         model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         taula.setModel(model);
 
-        TableColumn column;
+        //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
+        taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);       
+        
         for (int i = 0; i < taula.getColumnCount(); i++) {
-            column = taula.getColumnModel().getColumn(i);
-            column.setMaxWidth(250);
+            taula.getColumnModel().getColumn(i).setPreferredWidth(250);
         }
     }
 
@@ -335,10 +308,11 @@ public class Utils {
         model = new NotEditTableModel(dades, nomCols);
         taula.setModel(model);
 
-        TableColumn column;
+        //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
+        taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        
         for (int i = 0; i < taula.getColumnCount(); i++) {
-            column = taula.getColumnModel().getColumn(i);
-            column.setMaxWidth(250);
+            taula.getColumnModel().getColumn(i).setPreferredWidth(250);
         }
     }
 
@@ -353,6 +327,8 @@ public class Utils {
             int i=0;
             for (PropertyDescriptor pD : descriptors) {
                 Method m = pD.getReadMethod();
+                //Iterator<String> it=pD.attributeNames().asIterator();
+                //while(it.hasNext()) System.out.println(it.next());
                 if (m != null & !m.getName().equals("getClass")) {
                     methods[i++]=m;
                 }
@@ -378,6 +354,24 @@ public class Utils {
 
     }
 
+    //Mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
+    private static TableColumn arrangeTableColumns(JTable taula){
+        //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
+        taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+        
+        //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
+        TableColumnModel tcm = taula.getColumnModel();
+        TableColumn columna = tcm.getColumn(tcm.getColumnCount() - 1);
+        tcm.removeColumn(columna);
+
+        //Fixo l'amplada de les columnes que sí es mostren
+        for (int i = 0; i < taula.getColumnCount(); i++) {
+            taula.getColumnModel().getColumn(i).setPreferredWidth(250);
+        }
+
+        return columna;
+        
+    }
     
     
     //Classe que serveix per ordenar els mètodes de les classes alfabèticament
