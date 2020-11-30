@@ -408,6 +408,11 @@ public class Utils {
         combo.setModel(new DefaultComboBoxModel((resultSet != null ? resultSet.toArray() : new Object[]{})));
     }
 
+    //per carregar un JComboBox a partir d'una col·lecció que conté les dades 
+    public static <T> void loadCombo(Collection<T> resultSet, JComboBox combo) {
+        combo.setModel(new DefaultComboBoxModel((resultSet != null ? resultSet.toArray() : new ArrayList<T>().toArray())));
+    }
+
     //per carregar un JComboBox a partir d'un array que conté les dades 
     public static void loadCombo(Object[] resultSet, JComboBox combo) {
         combo.setModel(new DefaultComboBoxModel((resultSet != null ? resultSet : new Object[]{})));
@@ -489,3 +494,4 @@ class ModelCanvisBD extends DefaultTableModel {
     }
 }
  */
+

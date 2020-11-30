@@ -22,9 +22,6 @@
             <file>file:/home/profe/Dropbox/NetBeansProjects/2018-2019/DAM/MP3/UF5/MVCLibrary/src/utilscontroller/ModelCanvisBD.java</file>
             <file>file:/home/profe/Dropbox/NetBeansProjects/2018-2019/DAM/MP3/UF5/MVCLibrary/src/utilscontroller/Utils.java</file>
         </group>
-        <group>
-            <file>file:/home/profe/Dropbox/NetBeansProjects/2018-2019/DAM/MP3/UF5/MVCLibrary/src/utilscontroller/Utils.java</file>
-        </group>
         <group name="DAM-MP3-UF5 compartit">
             <file>file:/home/profe/Dropbox/NetBeansProjects/2019-2020/DAM/MP3/UF5/MVCLibrary/src/utilscontroller/Utils.java</file>
             <file>file:/home/profe/Dropbox/NetBeansProjects/2019-2020/DAM/MP3/UF5/MVCLibrary/src/utilscontroller/ModelCanvisBD.java</file>
@@ -37,5 +34,10 @@
             <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/MP3/UF5/MVCLibrary/src/utilscontroller/ModelCanvisBD.java</file>
             <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/MP3/UF5/MVCLibrary/src/utilscontroller/Utils.java</file>
         </group>
+        <group>
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/utilscontroller/ModelCanvisBD.java</file>
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/utilscontroller/Utils.java</file>
+        </group>
+        <group name="Programacio2nDAM-github"/>
     </open-files>
 </project-private>
