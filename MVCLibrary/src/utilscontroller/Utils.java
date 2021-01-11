@@ -207,8 +207,56 @@ public class Utils {
 
     }
 
+    //*************************************************************************
     //Com l'anterior però per treballar en BDs usant un ResultSet. Si la fem 
-    //editable podrem actualitzar les dades de la BD directament des de la JTable
+    //editable podrem actualitzar les dades de la BD directament des de la JTable --> 1r paràmetre Collection<E>
+    public static <E> TableColumn loadTable(Collection<E> dades, JTable taula, Class<E> classe, boolean editable, java.sql.ResultSet resultSet) {
+
+        //variables locals
+        ArrayList<String> columnNames = new ArrayList<>();
+        ArrayList<Object[]> data = new ArrayList<>();
+        //Per poder actualitzar la BD des de la taula usaríem el model comentat
+        //ModelCanvisBD model;
+        DefaultTableModel model;
+
+        //Anotem el nº de camps de la classe
+        Field[] camps = classe.getDeclaredFields();
+        //Ordenem els camps alfabèticament
+        Arrays.sort(camps, new OrderClassFieldsAlphabetically());
+        int ncamps = camps.length;
+        //Recorrem els camps de la classe i posem els seus noms com a columnes de la taula
+        //Com hem hagut de posar _numero_ davant el nom dels camps, mostrem el nom a partir del 2n _ 
+        for (Field f : camps) {
+            columnNames.add(f.getName().substring(f.getName().lastIndexOf('_') + 1).toUpperCase());
+        }
+        //Afegixo al model de la taula una columna on guardaré l'objecte mostrat a cada fila (amago la columna al final per a que no aparegue a la vista)
+        columnNames.add("objecte");
+        //Si hi ha algun element a la Col·lecció omplim la taula
+        if (!dades.isEmpty()) {
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
+        }
+
+        //Utilitzem el model que permet o no editar les caselles de la taula 
+        //segons el valor del paràmetre editable        
+        if (editable) {
+            //Utilitzem el model que permet actualitzar la BD des de la taula
+            model = new ModelCanvisBD(data, columnNames, resultSet);
+            //model = new DefaultTableModel(data, columnNames);
+        } else {
+            model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
+
+        }
+
+        taula.setModel(model);
+
+        //Crido al mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
+        return Utils.arrangeTableColumns(taula);
+
+    }
+    //*************************************************************************
+    
+    //Com l'anterior però per treballar en BDs usant un ResultSet. Si la fem 
+    //editable podrem actualitzar les dades de la BD directament des de la JTable --> 1r paràmetre ArrayList<E>
     public static <E> TableColumn loadTable(ArrayList<E> dades, JTable taula, Class<E> classe, boolean editable, java.sql.ResultSet resultSet) {
 
         //variables locals
