@@ -166,7 +166,7 @@ public class Utils {
     }
 
     //Com l'anterior però podem dir si volem taula editable o no
-    public static <E> TableColumn loadTable(ArrayList<E> dades, JTable taula, Class<E> classe, boolean editable) {
+    public static <E> TableColumn loadTable(Collection<E> dades, JTable taula, Class<E> classe, boolean editable) {
 
         //variables locals
         ArrayList<String> columnNames = new ArrayList<>();
