@@ -5,6 +5,7 @@
  */
 package provajpa;
 
+import model.Pojo;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
