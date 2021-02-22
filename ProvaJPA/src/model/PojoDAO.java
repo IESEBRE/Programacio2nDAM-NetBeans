@@ -5,11 +5,13 @@
  */
 package model;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
-import javax.persistence.Query;
+import javax.persistence.PersistenceException;
 import javax.persistence.RollbackException;
+import javax.persistence.TypedQuery;
 
 /**
  *
@@ -73,6 +75,12 @@ public class PojoDAO {
     
     //Consultes vàries....
 
-
+    // Retrieve all the Pojo objects from the database:
+    public List<Pojo> retrieveAllPojos() throws PersistenceException{
+        TypedQuery<Pojo> query
+                = em.createQuery("SELECT p FROM Pojo p", Pojo.class);
+        return query.getResultList();
+    }
+    
 
 }
