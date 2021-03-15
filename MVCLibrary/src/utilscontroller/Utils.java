@@ -56,7 +56,7 @@ public class Utils {
         columnNames.add("objecte");
         //Si hi ha algun element a l'arraylist omplim la taula
         if (dades.size() != 0) {
-            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps);
 
         }
 
@@ -104,7 +104,7 @@ public class Utils {
         columnNames.add("objecte");
         //Si hi ha algun element a l'arraylist omplim la taula
         if (dades.size() != 0) {
-/*
+            /*
             //Guardem els descriptors de mètode que ens interessen (els getters), més una columna per guardar l'objecte sencer
             Vector<Method> methods = new Vector(ncamps + 1);
             try {
@@ -135,18 +135,18 @@ public class Utils {
                 //Finalment afegixo la fila a les dades
                 data.add(row);
             }
-            */
-            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
-    
+             */
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps);
+
         }
 
         //Utilitzem el model que no permet editar les caselles de la taula
         model = new NotEditTableModel((Object[][]) data.toArray(new Object[0][]), columnNames.toArray());
         taula.setModel(model);
-        
+
         //Crido al mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
         return Utils.arrangeTableColumns(taula);
-/*        //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
+        /*        //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
         taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
         
         //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
@@ -162,7 +162,7 @@ public class Utils {
         }
 
         return columna;
-*/
+         */
     }
 
     //Com l'anterior però podem dir si volem taula editable o no
@@ -189,7 +189,7 @@ public class Utils {
         columnNames.add("objecte");
         //Si hi ha algun element a l'arraylist omplim la taula
         if (dades.size() != 0) {
-            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps);
         }
 
         //Utilitzem el model que permet o no editar les caselles de la taula 
@@ -233,7 +233,7 @@ public class Utils {
         columnNames.add("objecte");
         //Si hi ha algun element a la Col·lecció omplim la taula
         if (!dades.isEmpty()) {
-            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps);
         }
 
         //Utilitzem el model que permet o no editar les caselles de la taula 
@@ -254,7 +254,7 @@ public class Utils {
 
     }
     //*************************************************************************
-    
+
     //Com l'anterior però per treballar en BDs usant un ResultSet. Si la fem 
     //editable podrem actualitzar les dades de la BD directament des de la JTable --> 1r paràmetre ArrayList<E>
     public static <E> TableColumn loadTable(ArrayList<E> dades, JTable taula, Class<E> classe, boolean editable, java.sql.ResultSet resultSet) {
@@ -280,7 +280,7 @@ public class Utils {
         columnNames.add("objecte");
         //Si hi ha algun element a l'arraylist omplim la taula
         if (dades.size() != 0) {
-            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps); 
+            Utils.<E>getTableData(dades, classe, columnNames, data, ncamps);
         }
 
         //Utilitzem el model que permet o no editar les caselles de la taula 
@@ -325,7 +325,7 @@ public class Utils {
 
         //Si hi ha algun element a l'arraylist omplim la taula
         if (resultSet.size() != 0) {
-            Utils.<E>getTableData(resultSet, classe, columnNames, data, ncamps); 
+            Utils.<E>getTableData(resultSet, classe, columnNames, data, ncamps);
 
         }
 
@@ -333,8 +333,8 @@ public class Utils {
         taula.setModel(model);
 
         //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
-        taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);       
-        
+        taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
+
         for (int i = 0; i < taula.getColumnCount(); i++) {
             taula.getColumnModel().getColumn(i).setPreferredWidth(250);
         }
@@ -351,14 +351,13 @@ public class Utils {
             return;
         }
 
-
         //model = new NotEditTableModel(data, columnNames);
         model = new NotEditTableModel(dades, nomCols);
         taula.setModel(model);
 
         //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
         taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        
+
         for (int i = 0; i < taula.getColumnCount(); i++) {
             taula.getColumnModel().getColumn(i).setPreferredWidth(250);
         }
@@ -372,13 +371,13 @@ public class Utils {
 
             PropertyDescriptor[] descriptors = Introspector.getBeanInfo(classe).getPropertyDescriptors();
             Arrays.sort(descriptors, new OrderClassMethodsAlphabetically());
-            int i=0;
+            int i = 0;
             for (PropertyDescriptor pD : descriptors) {
                 Method m = pD.getReadMethod();
                 //Iterator<String> it=pD.attributeNames().asIterator();
                 //while(it.hasNext()) System.out.println(it.next());
                 if (m != null & !m.getName().equals("getClass")) {
-                    methods[i++]=m;
+                    methods[i++] = m;
                 }
             }
 
@@ -403,10 +402,10 @@ public class Utils {
     }
 
     //Mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
-    private static TableColumn arrangeTableColumns(JTable taula){
+    private static TableColumn arrangeTableColumns(JTable taula) {
         //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
         taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        
+
         //Borro la darrera columna per a que no aparegue a la vista, però abans la guardo en una variable que al final serà el que retorna el mètode
         TableColumnModel tcm = taula.getColumnModel();
         TableColumn columna = tcm.getColumn(tcm.getColumnCount() - 1);
@@ -418,10 +417,9 @@ public class Utils {
         }
 
         return columna;
-        
+
     }
-    
-    
+
     //Classe que serveix per ordenar els mètodes de les classes alfabèticament
     private static class OrderClassMethodsAlphabetically implements Comparator {
 
@@ -431,7 +429,16 @@ public class Utils {
             Method mo2 = ((PropertyDescriptor) o2).getReadMethod();
 
             if (mo1 != null && mo2 != null) {
-                return (int) mo1.getName().compareToIgnoreCase(mo2.getName());
+                //Si cap mètode és el getter d'un booleà, o ho són els 2, els comparem alfabèticament    
+                if (!mo1.getName().startsWith("is") && !mo2.getName().startsWith("is") || mo1.getName().startsWith("is") && mo2.getName().startsWith("is")) {
+                    return (int) mo1.getName().compareToIgnoreCase(mo2.getName());
+                } else //Si hi ha un sol getter d'un booleà, comparem a partir de la 3ª (is) o 4ª lletra (get) del nom del mètode                     
+                    if (mo1.getName().startsWith("is")) {
+                    return (int) mo1.getName().substring(2).compareToIgnoreCase(mo2.getName().substring(3));
+                } else {
+                    return (int) mo1.getName().substring(3).compareToIgnoreCase(mo2.getName().substring(2));
+                }
+
             }
 
             if (mo1 == null) {
@@ -448,14 +455,14 @@ public class Utils {
 
         public int compare(Object o1, Object o2) {
             return (int) (((Field) o1).getName().compareToIgnoreCase(((Field) o2).getName()));
+            
         }
     }
 
     //per carregar un JComboBox a partir d'un ArrayList que conté les dades 
-    public static void loadCombo(ArrayList resultSet, JComboBox combo) {
-        combo.setModel(new DefaultComboBoxModel((resultSet != null ? resultSet.toArray() : new Object[]{})));
-    }
-
+//    public static void loadCombo(ArrayList resultSet, JComboBox combo) {
+//        combo.setModel(new DefaultComboBoxModel((resultSet != null ? resultSet.toArray() : new Object[]{})));
+//    }
     //per carregar un JComboBox a partir d'una col·lecció que conté les dades 
     public static <T> void loadCombo(Collection<T> resultSet, JComboBox combo) {
         combo.setModel(new DefaultComboBoxModel((resultSet != null ? resultSet.toArray() : new ArrayList<T>().toArray())));
@@ -466,20 +473,32 @@ public class Utils {
         combo.setModel(new DefaultComboBoxModel((resultSet != null ? resultSet : new Object[]{})));
     }
 
+    //Model de dades de les JTable que no permet editar les caselles
+    public static class NotEditTableModel extends DefaultTableModel {
+
+        public NotEditTableModel(Object[][] data, Object[] columns) {
+            super(data, columns);
+        }
+
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+
+    }
 }
 
-//Model de dades de les JTable que no permet editar les caselles
-class NotEditTableModel extends DefaultTableModel {
-
-    public NotEditTableModel(Object[][] data, Object[] columns) {
-        super(data, columns);
-    }
-
-    public boolean isCellEditable(int row, int column) {
-        return false;
-    }
-
-}
+////Model de dades de les JTable que no permet editar les caselles
+//class NotEditTableModel extends DefaultTableModel {
+//
+//    public NotEditTableModel(Object[][] data, Object[] columns) {
+//        super(data, columns);
+//    }
+//
+//    public boolean isCellEditable(int row, int column) {
+//        return false;
+//    }
+//
+//}
 /*
 
 //Classe ModelCanvisBD usada en la BDOO db4o
@@ -542,4 +561,3 @@ class ModelCanvisBD extends DefaultTableModel {
     }
 }
  */
-

@@ -5,7 +5,7 @@
             <url>src/utilscontroller/Utils.java</url>
             <bookmark id="1">
                 <name/>
-                <line>497</line>
+                <line>566</line>
                 <key/>
             </bookmark>
         </file>
@@ -38,7 +38,22 @@
             <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/utilscontroller/ModelCanvisBD.java</file>
             <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/utilscontroller/Utils.java</file>
         </group>
+        <group name="Elies Fatsini">
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/utilscontroller/Utils.java</file>
+        </group>
+        <group name="Tomàs Fluixà">
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/build.xml</file>
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/nbproject/build-impl.xml</file>
+        </group>
+        <group name="Ayram Peñalver">
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/utilscontroller/Utils.java</file>
+        </group>
         <group name="Programacio2nDAM-github">
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/beans/JTableMVCGUIBeanInfo.java</file>
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/beans/JTableMVCGUI.java</file>
+            <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/utilscontroller/Utils.java</file>
+        </group>
+        <group name="Josep Altadill">
             <file>file:/home/profe/MEGAsync/NetBeansProjects/2020-2021/DAM/Programacio2nDAM/MVCLibrary/src/utilscontroller/Utils.java</file>
         </group>
     </open-files>
