@@ -364,7 +364,7 @@ public class Utils {
     }
 
     //Mètode que obté les dades i columnes que mostrarem a les taules
-    private static <E> void getTableData(Collection<E> dades, Class<E> classe, ArrayList<String> columnNames, ArrayList<Object[]> data, int ncamps) {
+    public static <E> void getTableData(Collection<E> dades, Class<E> classe, ArrayList<String> columnNames, ArrayList<Object[]> data, int ncamps) {
         //Guardem els descriptors de mètode que ens interessen (els getters), més una columna per guardar l'objecte sencer
         Method[] methods = new Method[ncamps];
         try {
@@ -400,9 +400,47 @@ public class Utils {
         }
 
     }
+    
+    //Mètode que obté les dades i columnes que mostrarem a les taules
+    public static <T> void getTableData(T[] dades, Class<T> classe, ArrayList<String> columnNames, ArrayList<Object[]> data, int ncamps) {
+        //Guardem els descriptors de mètode que ens interessen (els getters), més una columna per guardar l'objecte sencer
+        Method[] methods = new Method[ncamps];
+        try {
+
+            PropertyDescriptor[] descriptors = Introspector.getBeanInfo(classe).getPropertyDescriptors();
+            Arrays.sort(descriptors, new OrderClassMethodsAlphabetically());
+            int i = 0;
+            for (PropertyDescriptor pD : descriptors) {
+                Method m = pD.getReadMethod();
+                //Iterator<String> it=pD.attributeNames().asIterator();
+                //while(it.hasNext()) System.out.println(it.next());
+                if (m != null & !m.getName().equals("getClass")) {
+                    methods[i++] = m;
+                }
+            }
+
+        } catch (IntrospectionException ex) {
+        }
+        for (T m : dades) {
+            Object[] row = new Object[ncamps + 1];
+            int i = 0;
+            for (Method mD : methods) {
+                try {
+                    row[i++] = mD.invoke(m);
+                } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException ex) {
+                }
+            }
+
+            //Aquí guardo l'objecte sencer a la darrera columna
+            row[i] = m;
+            //Finalment afegixo la fila a les dades
+            data.add(row);
+        }
+
+    }
 
     //Mètode que configura les columnes de la taula, i retorna la columna que conté els objectes de la col·lecció
-    private static TableColumn arrangeTableColumns(JTable taula) {
+    public static TableColumn arrangeTableColumns(JTable taula) {
         //Fico la següent instrucció per a que s'ompligue tota la taula en els columnes
         taula.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
@@ -451,7 +489,7 @@ public class Utils {
     }
 
     //Classe que serveix per ordenar els camps de les classes alfabèticament
-    private static class OrderClassFieldsAlphabetically implements Comparator {
+    public static class OrderClassFieldsAlphabetically implements Comparator {
 
         public int compare(Object o1, Object o2) {
             return (int) (((Field) o1).getName().compareToIgnoreCase(((Field) o2).getName()));
