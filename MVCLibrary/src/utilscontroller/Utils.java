@@ -422,6 +422,7 @@ public class Utils {
         } catch (IntrospectionException ex) {
         }
         for (T m : dades) {
+            if(m==null) continue;
             Object[] row = new Object[ncamps + 1];
             int i = 0;
             for (Method mD : methods) {
