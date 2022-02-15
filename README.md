@@ -1,7 +1,5 @@
 # Programacio2nDAM
-Projectes necessaris al llarg del curs per als MPs 3 i 6
-
-Del NetBeans:
+Projectes del NetBeans necessaris al llarg del curs per als MPs 3 i 6
 
 - JavaBeanLibrary: Bean per connectar-se a una BD
 
@@ -11,4 +9,4 @@ Del NetBeans:
 
 - ProvaJPA: projecte exemple d'ús del JPA
 
-De l'IntelliJ:
+
